@@ -1,0 +1,22 @@
+/* Turing IA Animations */
+
+/* Icon color cycle animation */
+@keyframes turing-icon-hover {
+  0%, 100% { color: #8C8CD4; }
+  33% { color: #07ABDE; }
+  66% { color: #3CCEA7; }
+}
+
+/* Icon color cycle + spin animation */
+@keyframes turing-icon-spin {
+  0% { color: #8C8CD4; transform: rotate(0deg); }
+  33% { color: #07ABDE; transform: rotate(120deg); }
+  66% { color: #3CCEA7; transform: rotate(240deg); }
+  100% { color: #8C8CD4; transform: rotate(360deg); }
+}
+
+/* Text gradient walk animation */
+@keyframes turing-text-hover {
+  0% { background-position: 0% center; }
+  100% { background-position: -200% center; }
+}
