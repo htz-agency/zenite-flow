@@ -51,42 +51,9 @@ const minimapStyle = {
   opacity: 0.9,
 };
 
-const initialNodes: Node<ZeniteNodeData>[] = [
-  {
-    id: '1',
-    type: 'zenite',
-    position: { x: 100, y: 200 },
-    data: {
-      type: 'webhook',
-      group: 'gatilho',
-      label: 'Webhook Acionado',
-      subtitle: 'Quando lead entra no CRM',
-      outputCount: 1,
-    },
-  },
-  {
-    id: '2',
-    type: 'zenite',
-    position: { x: 450, y: 200 },
-    data: {
-      type: 'crm_criar_lead',
-      group: 'passo',
-      label: 'CRM - Criar Lead',
-      subtitle: 'Zenite CRM',
-      outputCount: 1,
-    },
-  },
-];
+const initialNodes: Node<ZeniteNodeData>[] = [];
 
-const initialEdges: Edge[] = [
-  {
-    id: 'e1-2',
-    source: '1',
-    target: '2',
-    type: 'smoothstep',
-    style: defaultEdgeStyle,
-  },
-];
+const initialEdges: Edge[] = [];
 
 interface FlowBuilderProps {
   flowId?: string;

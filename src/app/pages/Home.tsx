@@ -244,15 +244,7 @@ export function Home() {
             )}
           </div>
           
-          <Link
-            to="/editor/new"
-            className="group/pill relative flex items-center gap-[3px] h-[40px] pl-[16px] pr-[20px] rounded-[100px] bg-[#dcf0ff] text-[#28415c] hover:bg-[#bcdaf1] hover:shadow-[0px_2px_4px_0px_rgba(18,34,50,0.3)] transition-all duration-150"
-          >
-            <Plus size={16} weight="bold" />
-            <span className="font-semibold" style={{ fontSize: 15, letterSpacing: -0.5, lineHeight: "22px" }}>
-              Criar Fluxo
-            </span>
-          </Link>
+          
         </div>
 
         {/* Filter pills */}

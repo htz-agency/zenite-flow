@@ -4,9 +4,10 @@ import Dropdown from '../config-fields/Dropdown';
 interface PassoParamsProps {
   params: any;
   onChange: (params: any) => void;
+  credentials: Array<{ value: string; label: string }>;
 }
 
-export default function PassoParams({ params, onChange }: PassoParamsProps) {
+export default function PassoParams({ params, onChange, credentials }: PassoParamsProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...params, [field]: value });
   };
@@ -36,10 +37,7 @@ export default function PassoParams({ params, onChange }: PassoParamsProps) {
               value={params.credenciais || ''}
               onChange={(v) => updateField('credenciais', v)}
               placeholder="Selecione a credencial"
-              options={[
-                { value: 'cred_1', label: 'Conta Principal' },
-                { value: 'cred_2', label: 'Conta Secundária' },
-              ]}
+              options={credentials}
             />
           </FormField>
 

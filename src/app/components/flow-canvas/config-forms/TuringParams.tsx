@@ -9,9 +9,10 @@ const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 interface TuringParamsProps {
   params: any;
   onChange: (params: any) => void;
+  credentials: Array<{ value: string; label: string }>;
 }
 
-export default function TuringParams({ params, onChange }: TuringParamsProps) {
+export default function TuringParams({ params, onChange, credentials }: TuringParamsProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...params, [field]: value });
   };
@@ -72,10 +73,7 @@ export default function TuringParams({ params, onChange }: TuringParamsProps) {
           value={params.credenciais || ''}
           onChange={(v) => updateField('credenciais', v)}
           placeholder="Selecione a credencial"
-          options={[
-            { value: 'cred_1', label: 'API Key Principal' },
-            { value: 'cred_2', label: 'API Key Secundária' },
-          ]}
+          options={credentials}
         />
       </FormField>
 

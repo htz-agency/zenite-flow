@@ -4,27 +4,45 @@ import TextArea from '../config-fields/TextArea';
 import Dropdown from '../config-fields/Dropdown';
 import NumberInput from '../config-fields/NumberInput';
 import Checkbox from '../config-fields/Checkbox';
+import { useEffect } from 'react';
 
 const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 
 interface GatilhoParamsProps {
   params: any;
   onChange: (params: any) => void;
+  nodeType?: string;
 }
 
-export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) {
+export default function GatilhoParams({ params, onChange, nodeType }: GatilhoParamsProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...params, [field]: value });
   };
 
-  const tipo = params.tipo || '';
+  // Pré-seleciona o tipo baseado no nodeType
+  const resolvedTipo = params.tipo || (
+    nodeType === 'objetoCriado' || nodeType === 'objetoAtualizado' || nodeType === 'objetoMudouFase'
+      ? 'evento_app'
+      : nodeType === 'agendado' ? 'agendado'
+      : nodeType === 'webhook' ? 'webhook'
+      : nodeType === 'formulario' ? 'formulario'
+      : nodeType === 'erro' ? 'erro'
+      : 'manual'
+  );
+
+  // Chama onChange imediatamente se params.tipo ainda não estiver definido
+  useEffect(() => {
+    if (!params.tipo && resolvedTipo) {
+      onChange({ ...params, tipo: resolvedTipo });
+    }
+  }, []);
 
   return (
     <div className="flex flex-col gap-[20px]">
       {/* Tipo de gatilho */}
       <FormField label="Tipo de gatilho" required>
         <Dropdown
-          value={tipo}
+          value={resolvedTipo}
           onChange={(v) => updateField('tipo', v)}
           placeholder="Selecione o tipo"
           options={[
@@ -39,7 +57,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       </FormField>
 
       {/* TIPO: AGENDADO */}
-      {tipo === 'agendado' && (
+      {resolvedTipo === 'agendado' && (
         <>
           <FormField label="Modo de agenda" required>
             <Dropdown
@@ -102,7 +120,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       )}
 
       {/* TIPO: WEBHOOK */}
-      {tipo === 'webhook' && (
+      {resolvedTipo === 'webhook' && (
         <>
           <FormField label="Método HTTP" required>
             <Dropdown
@@ -159,7 +177,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       )}
 
       {/* TIPO: EVENTO APP */}
-      {tipo === 'evento_app' && (
+      {resolvedTipo === 'evento_app' && (
         <>
           <FormField label="Aplicativo" required>
             <Dropdown
@@ -203,7 +221,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       )}
 
       {/* TIPO: FORMULÁRIO */}
-      {tipo === 'formulario' && (
+      {resolvedTipo === 'formulario' && (
         <>
           <FormField label="Título do formulário" required>
             <TextInput
@@ -233,7 +251,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       )}
 
       {/* TIPO: MANUAL */}
-      {tipo === 'manual' && (
+      {resolvedTipo === 'manual' && (
         <div className="p-[16px] bg-[#EBF1FA] rounded-[10px]">
           <p className="text-[#4E6987]" style={{ fontSize: 13, fontWeight: 500, letterSpacing: -0.3, ...ff }}>
             Gatilho manual para testes. Execute o fluxo diretamente do editor clicando no botão "Testar".
@@ -242,7 +260,7 @@ export default function GatilhoParams({ params, onChange }: GatilhoParamsProps) 
       )}
 
       {/* TIPO: ERRO */}
-      {tipo === 'erro' && (
+      {resolvedTipo === 'erro' && (
         <>
           <FormField label="Fluxo monitorado" description="Deixe vazio para capturar erros de qualquer fluxo">
             <Dropdown

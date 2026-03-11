@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Play } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { getNodeIcon, ALL_NODES } from '../../data/node-catalog';
 import type { ZeniteNodeData, NodeGroup } from '../../types/node-types';
+import { supabase } from '../../../lib/supabase';
 import ConfiguracoesTab from './config-forms/ConfiguracoesTab';
 import GatilhoParams from './config-forms/GatilhoParams';
 import PassoParams from './config-forms/PassoParams';
@@ -11,6 +12,7 @@ import TuringParams from './config-forms/TuringParams';
 import NotificacoesParams from './config-forms/NotificacoesParams';
 import TempoParams from './config-forms/TempoParams';
 import VariavelParams from './config-forms/VariavelParams';
+import GmailParams from './config-forms/GmailParams';
 import GenericParams from './config-forms/GenericParams';
 
 const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
@@ -24,10 +26,34 @@ interface NodeConfigDialogProps {
 export default function NodeConfigDialog({ nodeData, onClose, onSave }: NodeConfigDialogProps) {
   const [localData, setLocalData] = useState(nodeData);
   const [activeTab, setActiveTab] = useState<'parameters' | 'settings'>('parameters');
+  const [credentials, setCredentials] = useState<Array<{ value: string; label: string }>>([]);
   
   // Buscar definição do nó no catálogo
   const nodeDefinition = ALL_NODES.find(n => n.name === nodeData.type);
   const Icon = getNodeIcon(nodeData.type);
+
+  // Carregar credenciais do Supabase
+  useEffect(() => {
+    async function loadCredentials() {
+      const { data: { user } } = await supabase.auth.getUser();
+      const org_id = user?.user_metadata?.org_id;
+      if (!org_id) return;
+
+      const { data } = await supabase
+        .from('flow_credentials')
+        .select('id, name, type, is_valid, meta')
+        .eq('org_id', org_id)
+        .eq('is_valid', true);
+
+      setCredentials(
+        (data || []).map(c => ({
+          value: c.id,
+          label: `${c.meta?.email ?? c.name} (${c.type})`,
+        }))
+      );
+    }
+    loadCredentials();
+  }, []);
 
   // Obter cor baseada no grupo do nó
   const getCategoryColor = () => {
@@ -76,28 +102,35 @@ export default function NodeConfigDialog({ nodeData, onClose, onSave }: NodeConf
 
   // Determinar qual formulário de parâmetros mostrar baseado na categoria
   const getParamsComponent = () => {
-    const group = nodeDefinition?.group?.[0] as NodeGroup | undefined;
-    
     const params = localData.params || {};
     const setParams = (newParams: any) => {
       setLocalData({ ...localData, params: newParams });
     };
 
-    switch (group) {
-      case 'gatilho':
-        return <GatilhoParams params={params} onChange={setParams} />;
-      case 'passo':
-        return <PassoParams params={params} onChange={setParams} />;
-      case 'rota':
-        return <RotaParams params={params} onChange={setParams} />;
-      case 'turing':
-        return <TuringParams params={params} onChange={setParams} />;
+    // Primeiro tenta pelo tipo específico do nó
+    switch (nodeData.type) {
+      case 'gmail':
+        return <GmailParams params={params} onChange={setParams} credentials={credentials} />;
       case 'notificacoes':
-        return <NotificacoesParams params={params} onChange={setParams} />;
+        return <NotificacoesParams params={params} onChange={setParams} credentials={credentials} />;
+      case 'turing':
+        return <TuringParams params={params} onChange={setParams} credentials={credentials} />;
       case 'tempo':
         return <TempoParams params={params} onChange={setParams} />;
       case 'variavel':
         return <VariavelParams params={params} onChange={setParams} />;
+      case 'rota':
+      case 'bifurcacao':
+        return <RotaParams params={params} onChange={setParams} />;
+    }
+
+    // Fallback pelo grupo
+    const group = nodeDefinition?.group?.[0] as NodeGroup | undefined;
+    switch (group) {
+      case 'gatilho':
+        return <GatilhoParams params={params} onChange={setParams} nodeType={nodeData.type} />;
+      case 'passo':
+        return <PassoParams params={params} onChange={setParams} credentials={credentials} />;
       default:
         return <GenericParams nodeType={nodeData.type} params={params} onChange={setParams} />;
     }

@@ -8,9 +8,10 @@ const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 interface NotificacoesParamsProps {
   params: any;
   onChange: (params: any) => void;
+  credentials: Array<{ value: string; label: string }>;
 }
 
-export default function NotificacoesParams({ params, onChange }: NotificacoesParamsProps) {
+export default function NotificacoesParams({ params, onChange, credentials }: NotificacoesParamsProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...params, [field]: value });
   };
@@ -79,9 +80,7 @@ export default function NotificacoesParams({ params, onChange }: NotificacoesPar
               value={params.credencial_google || ''}
               onChange={(v) => updateField('credencial_google', v)}
               placeholder="Selecione a conta Gmail"
-              options={[
-                { value: 'google_workspace', label: 'Google Workspace' },
-              ]}
+              options={credentials}
             />
           </FormField>
         </>
@@ -95,7 +94,7 @@ export default function NotificacoesParams({ params, onChange }: NotificacoesPar
               value={params.credencial || ''}
               onChange={(v) => updateField('credencial', v)}
               placeholder="Selecione a credencial Slack"
-              options={[]}
+              options={credentials}
             />
           </FormField>
 
@@ -126,7 +125,7 @@ export default function NotificacoesParams({ params, onChange }: NotificacoesPar
               value={params.credencial || ''}
               onChange={(v) => updateField('credencial', v)}
               placeholder=""
-              options={[]}
+              options={credentials}
             />
           </FormField>
 

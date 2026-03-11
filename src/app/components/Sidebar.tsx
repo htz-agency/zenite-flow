@@ -13,6 +13,7 @@ import {
   Swatches,
   Key,
 } from "@phosphor-icons/react";
+import LogoZeniteFlw from "../../imports/LogoZeniteFlw";
 
 const fontFeature = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 
@@ -117,17 +118,16 @@ export function Sidebar({ children }: SidebarProps) {
           {/* Header */}
           <div className="px-5 py-5">
             <div className="flex items-center gap-[8px] mb-[12px]">
-              <GitBranch size={20} weight="fill" className="text-[#0483AB]" />
-              <h2 className="text-[#122232] flex-1" style={{ fontSize: 16, fontWeight: 700, letterSpacing: -0.3, ...fontFeature }}>
-                Zenite Flow
-              </h2>
+              <div className="w-[128px] h-[30px]">
+                <LogoZeniteFlw />
+              </div>
             </div>
             <Link
               to="/flow-builder"
-              className="flex items-center justify-center gap-[6px] w-full h-[34px] rounded-[500px] bg-[#3CCEA7] text-white hover:bg-[#30B893] transition-colors"
+              className="group/pill relative flex items-center justify-center gap-[3px] w-full h-[40px] px-[16px] rounded-[100px] bg-[#dcf0ff] text-[#28415c] hover:bg-[#bcdaf1] hover:shadow-[0px_2px_4px_0px_rgba(18,34,50,0.3)] transition-all duration-150 cursor-pointer"
             >
-              <Plus size={14} weight="bold" />
-              <span className="font-bold uppercase tracking-[0.5px]" style={{ fontSize: 10, ...fontFeature }}>
+              <Plus size={16} weight="bold" />
+              <span className="font-semibold" style={{ fontSize: 15, letterSpacing: -0.5, lineHeight: "22px", ...fontFeature }}>
                 Novo Fluxo
               </span>
             </Link>
