@@ -27,6 +27,7 @@ import type { ZeniteNodeData, NodeGroup } from '../../types/node-types';
 import { FlowContext } from '../../contexts/FlowContext';
 import { useFlowData } from '../../../hooks/useFlowData';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { projectId } from '../../../utils/supabase/info';
 
 const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 
@@ -311,7 +312,7 @@ export default function FlowBuilder({ flowId }: FlowBuilderProps) {
     try {
       // Chama o servidor para criar o flow_run
       const serverUrl = import.meta.env.VITE_SERVER_URL
-        ?? `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/make-server-e7f4e3cf`;
+        ?? `https://${projectId}.supabase.co/functions/v1/make-server-e7f4e3cf`;
 
       const res = await fetch(`${serverUrl}/flow-runner`, {
         method: "POST",

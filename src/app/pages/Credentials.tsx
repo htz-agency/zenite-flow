@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useCredentials } from "../../hooks/useCredentials";
 import { Skeleton } from "../components/ui/skeleton";
 import { supabase } from "../../lib/supabase";
+import { projectId } from '../../../utils/supabase/info';
 
 const fontFeature = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 
@@ -173,7 +174,7 @@ export function Credentials() {
     const { data: { user } } = await supabase.auth.getUser();
     const org_id = user?.user_metadata?.org_id;
     const user_id = user?.id;
-    const supabaseUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co`;
+    const supabaseUrl = `https://${projectId}.supabase.co`;
     window.location.href = `${supabaseUrl}/functions/v1/google-oauth-start?org_id=${org_id}&user_id=${user_id}&name=Google+Workspace`;
   };
 
