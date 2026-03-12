@@ -27,7 +27,7 @@ import type { ZeniteNodeData, NodeGroup } from '../../types/node-types';
 import { FlowContext } from '../../contexts/FlowContext';
 import { useFlowData } from '../../../hooks/useFlowData';
 import { useDebounce } from '../../../hooks/useDebounce';
-import { projectId } from '../../../utils/supabase/info';
+import { projectId } from '../../../../utils/supabase/info';
 
 const ff = { fontFeatureSettings: "'ss01', 'ss04', 'ss05', 'ss07'" };
 
